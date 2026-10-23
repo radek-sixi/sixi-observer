@@ -1,0 +1,23 @@
+services:
+  sixi-observer:
+    build: .
+    image: ghcr.io/radek-sixi/sixi-observer:latest
+    restart: unless-stopped
+    devices:
+      - "${SIXI_SERIAL_PORT:-/dev/ttyACM0}:/dev/ttyACM0"
+    ports:
+      - "127.0.0.1:8765:8765"
+    command:
+      - "run"
+      - "--serial"
+      - "/dev/ttyACM0"
+      - "--token"
+      - "${SIXI_OBSERVER_TOKEN:-}"
+      - "--name"
+      - "${SIXI_OBSERVER_NAME:-My T-Beam Supreme}"
+      - "--lat"
+      - "${SIXI_OBSERVER_LAT:?set SIXI_OBSERVER_LAT (your station latitude)}"
+      - "--lon"
+      - "${SIXI_OBSERVER_LON:?set SIXI_OBSERVER_LON (your station longitude)}"
+      - "--mode"
+      - "${SIXI_OBSERVER_MODE:-private}"
