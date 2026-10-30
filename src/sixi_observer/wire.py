@@ -1,4 +1,4 @@
-"""MeshCore OTA wire parser, Ed25519 signature verifier, and ML Ghost-Hop triangulator."""
+"""MeshCore OTA wire parser, Ed25519 signature verifier, and heuristic ghost-hop estimator."""
 
 from __future__ import annotations
 
@@ -164,7 +164,7 @@ def build_flight_from_packet(
     observer_lon: float,
     known_nodes: dict[str, dict[str, Any]],
 ) -> dict[str, Any] | None:
-    """Construct a Sixi Map `PacketFlight` with ML Ghost-Hop Triangulation."""
+    """Construct a Sixi Map `PacketFlight` with heuristic ghost-hop estimation."""
     waypoints: list[dict[str, Any]] = []
     if pkt.advert and pkt.advert.get("lat") is not None and pkt.advert.get("lon") is not None:
         adv = pkt.advert
@@ -208,7 +208,7 @@ def build_flight_from_packet(
             )
             anchor_lat, anchor_lon = float(matched["lat"]), float(matched["lon"])
         else:
-            # ML Bayesian Ghost-Hop Triangulation
+            # Heuristic ghost-hop position estimate
             seed = int(h[:4].ljust(4, "0"), 16)
             angle = math.radians(seed % 360)
             snr_v = pkt.snr if pkt.snr is not None else -6.0
@@ -228,7 +228,7 @@ def build_flight_from_packet(
             waypoints.append(
                 {
                     "id": f"ghost:{h.lower()}",
-                    "name": f"👻 ML ~{h}",
+                    "name": f"👻 ~{h}",
                     "hash": h,
                     "lat": glat,
                     "lon": glon,
@@ -277,7 +277,7 @@ def build_flight_from_packet(
     anomaly_label = (
         f"🏆 DX Hop {round(max_hop_km)} km"
         if anomaly_tag == "DX_RECORD"
-        else f"👻 ML Ghost ~{pkt.hops[0] if pkt.hops else '?'}"
+        else f"👻 Ghost ~{pkt.hops[0] if pkt.hops else '?'}"
         if anomaly_tag == "GHOST_TRIANGULATED"
         else f"🛡️ Sub-Noise SX1262 ({pkt.snr:+.1f} dB)"
         if anomaly_tag == "SUBNOISE_HERO" and pkt.snr is not None

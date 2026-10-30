@@ -1,13 +1,13 @@
-# 🛰️ sixi-observer — Open-Source LoRa & RTL-SDR Bridge for Sixi AI Map
+# 🛰️ sixi-observer — Open-Source LoRa Telemetry Bridge for Sixi AI Map
 
-**`sixi-observer`** is an open-source, lightweight bridge that connects your own **MeshCore / LoRa radio** (**LilyGO T-Beam Supreme SX1262**, **Heltec V3/V4**, **RAK4631**) or **RTL-SDR Blog V4** to the public [**Sixi AI Map (`map.sixi.ai`)**](https://map.sixi.ai).
+**`sixi-observer`** is an open-source, lightweight bridge that connects your own **MeshCore / LoRa radio** (**LilyGO T-Beam Supreme SX1262**, **Heltec V3/V4**, **RAK4631**) to the public [**Sixi AI Map (`map.sixi.ai`)**](https://map.sixi.ai).
 
-By running `sixi-observer` (or using the built-in **Zero-Install WebSerial USB** mode directly in your browser), you unlock the exact same real-time SIGINT & ML capabilities on the public map that run on private Sixi Edge nodes:
+By running `sixi-observer`, you unlock real-time radio telemetry and packet-path visualization on the public map:
 
 - 🟢 **Ed25519 Cryptographic Verification (`Verified locally`)** — green ring around nodes whose signed advertisements were verified directly by your radio.
-- ☄️ **Live Animated Packet Flights** — real-time WebGL comet trails (`Origin → Hop 1 → … → Your Radio`) with per-hop shockwave ripples and exact sub-noise SNR/RSSI.
-- 👻 **ML Bayesian Ghost-Hop Triangulation** — estimates coordinates and uncertainty radius (`±km`) for unidentified repeaters (`~HASH`) heard in multi-hop flood paths.
-- 🔒 **Privacy-First User Overlay** — by default (mode *private*), your receiver's location, SNR, and packets are stored in your isolated `/v1/users/<uid>/live` overlay and are visible **only to you** when signed into [`map.sixi.ai`](https://map.sixi.ai).
+- ☄️ **Live Animated Packet Flights** — real-time WebGL comet trails (`Origin → Hop 1 → … → Your Radio`) with per-hop ripples and sub-noise SNR/RSSI.
+- 👻 **Heuristic Ghost-Hop Estimation** — uses an SNR and path-interpolation heuristic to estimate approximate coordinates and uncertainty radius (`±km`) for unidentified repeaters (`~HASH`) heard in multi-hop flood paths.
+- 🔒 **Privacy-First User Overlay** — by default (mode *private*), your receiver's coarsened location, SNR, and packet metadata are stored in your isolated `/v1/users/<uid>/live` overlay for your signed-in account on [`map.sixi.ai`](https://map.sixi.ai).
 
 ---
 
@@ -27,7 +27,7 @@ uvx --from git+https://github.com/radek-sixi/sixi-observer sixi-observer run \
   --lat 47.37 --lon 8.54
 ```
 
-> **No hardware plugged in yet?** Run with `--demo` to test live multi-hop comet animations and ML Ghost-Hop triangulation immediately:
+> **No hardware plugged in yet?** Run with `--demo` to test live multi-hop comet animations and heuristic Ghost-Hop estimation immediately:
 > ```bash
 > uvx --from git+https://github.com/radek-sixi/sixi-observer sixi-observer run --demo
 > ```
@@ -44,17 +44,17 @@ docker run -d --name sixi-observer --restart unless-stopped \
 
 ### Option 3: Local Zero-Latency WebSocket Bridge (`ws://127.0.0.1:8765/ws`)
 
-`sixi-observer` also exposes a local WebSocket server on `ws://127.0.0.1:8765/ws`. In the **`🛰️ Connect Radio`** modal on `map.sixi.ai`, click **`🔗 Połącz z 127.0.0.1:8765`** to stream packets directly from your USB radio to the browser with **0 ms cloud latency** — even without an account!
+`sixi-observer` also exposes a local WebSocket server on `ws://127.0.0.1:8765/ws`. After signing in inside the **`🛰️ Connect Radio`** modal on `map.sixi.ai`, click **`🔗 Connect to 127.0.0.1:8765`** to stream packets directly from your USB radio to the browser with **0 ms cloud latency**.
 
 ---
 
-## 🛡️ Security & Privacy Guarantees
+## 🛡️ Security & Privacy
 
-1. **No Private Messages Ever Leave Your Device:** Encrypted direct messages (`TXT_MSG` / ECDH) and private channel keys are never decoded or transmitted.
+1. **Public Advertisements & Path Metadata Only:** `sixi-observer` only decodes `ADVERT` payloads; encrypted direct messages (`TXT_MSG` / ECDH) and private channel keys are not decoded or transmitted, and station coordinates are coarsened to `0.01°` (~1 km) before leaving the device.
 2. **Local Ed25519 Signature Checking:** `sixi-observer` verifies the 64-byte Ed25519 signature of every MeshCore `ADVERT` frame before marking `verified_local = true`.
 3. **Two Privacy Modes**, chosen in the map's **`🛰️ Connect Radio`** dialog (stored with your account; the `--mode` flag is informational only):
-   - `private` *(default)*: Only your authenticated account can see your station and its received paths.
-   - `community`: Keeps your station private while contributing anonymized multi-hop repeater-to-repeater flights (`REPEATER → REPEATER`) to the public map animations.
+   - `private` *(default)*: Your station and its received paths are stored in your account's user overlay.
+   - `community`: Keeps your station in your user overlay while contributing anonymized multi-hop repeater-to-repeater flights (`REPEATER → REPEATER`) to the public map animations.
 
 ---
 
