@@ -246,15 +246,15 @@ async def async_main(args: argparse.Namespace) -> None:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="sixi-observer",
-        description="Connect your T-Beam Supreme / Heltec / RTL-SDR to Sixi AI Map (map.sixi.ai)",
+        description="Connect any MeshCore LoRa radio to Sixi AI Map (map.sixi.ai)",
     )
     sub = p.add_subparsers(dest="cmd")
     run_p = sub.add_parser("run", help="Start the observer bridge")
-    run_p.add_argument("--serial", default="", help="Serial device (e.g. /dev/ttyACM0 or COM3)")
+    run_p.add_argument("--serial", default="", help="Serial device (e.g. /dev/ttyACM0, /dev/ttyUSB0, or COM3)")
     run_p.add_argument("--baud", type=int, default=115200, help="Serial baud rate (default: 115200)")
     run_p.add_argument("--token", default="", help="Personal observer token (sobs_live_...)")
-    run_p.add_argument("--name", default="My T-Beam Supreme", help="Station name on the map")
-    run_p.add_argument("--device", default="LilyGO T-Beam Supreme SX1262", help="Hardware model")
+    run_p.add_argument("--name", default="MeshCore Observer", help="Station name on the map")
+    run_p.add_argument("--device", default="MeshCore USB Radio", help="Hardware model label (optional)")
     run_p.add_argument(
         "--lat", type=float, help="Station latitude (required except with --demo; sent rounded to 0.01°)"
     )

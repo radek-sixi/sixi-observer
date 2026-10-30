@@ -14,7 +14,7 @@ services:
       - "--token"
       - "${SIXI_OBSERVER_TOKEN:-}"
       - "--name"
-      - "${SIXI_OBSERVER_NAME:-My T-Beam Supreme}"
+      - "${SIXI_OBSERVER_NAME:-MeshCore Observer}"
       - "--lat"
       - "${SIXI_OBSERVER_LAT:?set SIXI_OBSERVER_LAT (your station latitude)}"
       - "--lon"

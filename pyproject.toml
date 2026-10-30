@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "sixi-observer"
 version = "0.1.1"
-description = "Open-source MeshCore / LoRa & RTL-SDR V4 observer bridge for Sixi AI Map (map.sixi.ai)"
+description = "Open-source MeshCore / LoRa observer bridge for Sixi AI Map (map.sixi.ai)"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"

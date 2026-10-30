@@ -1,6 +1,6 @@
 # 🛰️ sixi-observer — Open-Source LoRa Telemetry Bridge for Sixi AI Map
 
-**`sixi-observer`** is an open-source, lightweight bridge that connects your own **MeshCore / LoRa radio** (**LilyGO T-Beam Supreme SX1262**, **Heltec V3/V4**, **RAK4631**) to the public [**Sixi AI Map (`map.sixi.ai`)**](https://map.sixi.ai).
+**`sixi-observer`** is an open-source, lightweight bridge that connects **any MeshCore-compatible LoRa radio** over USB serial (e.g. Heltec, LilyGO T-Beam / T-Deck / T3-S3, RAK WisBlock, Seeed XIAO / SenseCAP, B&Q Station G2, and other SX126x/SX127x boards) to the public [**Sixi AI Map (`map.sixi.ai`)**](https://map.sixi.ai).
 
 By running `sixi-observer`, you unlock real-time radio telemetry and packet-path visualization on the public map:
 
@@ -17,13 +17,13 @@ By running `sixi-observer`, you unlock real-time radio telemetry and packet-path
 
 1. Open [**map.sixi.ai**](https://map.sixi.ai) and click **`🛰️ Connect Radio`** in the top-right bar.
 2. Sign in (GitHub / Google / Email) to copy your personal `sobs_live_...` token.
-3. Plug in your **T-Beam Supreme / Heltec** via USB and run:
+3. Plug in your **MeshCore radio** via USB and run:
 
 ```bash
 uvx --from git+https://github.com/radek-sixi/sixi-observer sixi-observer run \
   --serial /dev/ttyACM0 \
   --token sobs_live_YOUR_TOKEN \
-  --name "My T-Beam Supreme" \
+  --name "My MeshCore Node" \
   --lat 47.37 --lon 8.54
 ```
 
